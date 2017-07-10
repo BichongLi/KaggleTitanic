@@ -3,9 +3,7 @@ import pandas as pd
 train_file = "../data/train.csv"
 train_data = pd.read_csv(train_file)
 
-del train_data['Name']
-del train_data['Ticket']
-del train_data['Cabin']
+train_data = train_data.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1)
 
 train_data = train_data.dropna(how='any')
 train_data['Sex'] = (train_data['Sex'] == 'male').astype(int)
