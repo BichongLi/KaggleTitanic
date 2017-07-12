@@ -7,6 +7,7 @@ import seaborn as sns
 train_file = "../data/preprocessed_train.csv"
 train_data = pd.read_csv(train_file)
 
+
 # plot PClass and Sex
 # sns.countplot(x="Pclass", hue="Sex", data=df_survived)
 
@@ -19,7 +20,7 @@ train_data = pd.read_csv(train_file)
 # sns.barplot(x="Embarked", y="Survived", data=embark_mean, order=['S', 'C', 'Q'], ax=axis3)
 
 # plot Age
-# sns.factorplot(x="Age", data=df_survived, kind="count")
+# train_data["Age"].astype(int).hist(bins=70)
 
 # plot Fare
 # df_fare_survived = train_data["Fare"][train_data["Survived"] == 1]
@@ -28,5 +29,25 @@ train_data = pd.read_csv(train_file)
 # std_fare = DataFrame([df_fare_not_survived.std(), df_fare_survived.std()])
 # train_data["Fare"].plot(kind="hist", figsize=(15, 3), bins=100, xlim=(0, 600))
 # avg_fare.plot(yerr=std_fare, kind="bar", legend=False)
+
+def plot_bar(label, data):
+    sns.set_color_codes("pastel")
+    total = data[[label, "Survived"]]
+    total["Survived"] = 1
+    total = total.groupby([label], as_index=False).sum()
+    sns.barplot(x=label, y="Survived", data=data, label="Total", color="b")
+    sns.set_color_codes("muted")
+    survived = data[[label, "Survived"]].groupby([label], as_index=False).sum()
+    sns.barplot(x=label, y="Survived", data=survived, label="Survived", color="b")
+
+
+# plot SibSp
+#plot_bar("SibSp", train_data)
+
+# plot Parch
+#plot_bar("Parch", train_data)
+
+family = pd.DataFrame({'Survived': train_data["Survived"], 'Family': train_data["Parch"] + train_data["SibSp"]})
+family["Family"][family["Family"] > 0] = 1
 
 plt.show()
